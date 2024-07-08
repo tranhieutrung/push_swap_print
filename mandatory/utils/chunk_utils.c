@@ -6,9 +6,11 @@
 /*   By: hitran <hitran@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:31:13 by hitran            #+#    #+#             */
-/*   Updated: 2024/07/05 16:19:53 by hitran           ###   ########.fr       */
+/*   Updated: 2024/07/08 10:07:47 by hitran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "mylib.h"
 
 int	set_number_of_chunks(int size)
 {
@@ -20,13 +22,16 @@ int	set_number_of_chunks(int size)
 
 void	set_chunk_range(int *start, int *end, int size)
 {
-	int	chunk;
+	int	chunk_size;
 
-	chunk = size / set_number_of_chunks(size);
-	*start = (size / 2) - chunk;
-	*end = (size / 2) + chunk;
+	chunk_size = size / set_number_of_chunks(size);
+	ft_printf("Chunk size: %d\n", chunk_size);
+	ft_printf("Chunk range: [median - chunk_size : median + chunk_size]\n");
+	*start = (size / 2) - chunk_size;
+	*end = (size / 2) + chunk_size;
 	if (*end >= (size - 3))
 		*end = size - 4;
+	ft_printf("Set chunk: [%d : %d]\n", *start, *end);
 }
 
 int	is_chunk_sent(int *pushed_value, int start, int end)
@@ -41,6 +46,7 @@ int	is_chunk_sent(int *pushed_value, int start, int end)
 		else
 			return (0);
 	}
+	ft_printf("Chunk is sent\n");
 	return (1);
 }
 
@@ -57,6 +63,8 @@ void	update_chunk(int *pushed_value, int *start, int *end, int size)
 	}
 	if (i == (size / 2))
 		*start = *start - (size / set_number_of_chunks(size));
+	if (*start < 0)
+		*start = 0;
 	i = size / 2;
 	while (i < *end)
 	{
@@ -64,12 +72,18 @@ void	update_chunk(int *pushed_value, int *start, int *end, int size)
 			break ;
 		i++;
 	}
-	if (i == *end && pushed_value[i])
-		*end = *end + (size / set_number_of_chunks(size));
-	if (*start < 0)
-		*start = 0;
-	if (*end >= (size - 3))
-		*end = size - 4;
+	if (*end < size - 4)
+	{
+		if (i == *end && pushed_value[i])
+			*end = *end + (size / set_number_of_chunks(size));
+		if (*end >= (size - 3))
+		{
+			ft_printf("(End = %d) >= ((size = %d) - 3 = %d)\n", *end, size, size - 3);
+			*end = size - 4;
+			ft_printf("Set end = %d (size - 4)\n", *end);
+		}
+	}
+	ft_printf("Update chunk: [%d : %d]\n", *start, *end);
 }
 
 /*These number of chunks are chosen based on results of push_swap tester:

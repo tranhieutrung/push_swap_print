@@ -6,7 +6,7 @@
 /*   By: hitran <hitran@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 15:56:32 by hitran            #+#    #+#             */
-/*   Updated: 2024/07/07 21:17:24 by hitran           ###   ########.fr       */
+/*   Updated: 2024/07/08 10:09:36 by hitran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ void	push_a2b(t_pushswap *ps, int size)
 	int	*pushed_value;
 
 	pushed_value = ft_calloc(size, sizeof(int));
+	ft_printf("Median is: %d\n", size/2);
 	set_chunk_range(&start, &end, size);
-	ft_printf("Set chunk: [%d - %d]\n", start, end);
+	ft_printf("Push all numbers with index belonging to the chunk\n", size/2);
 	while (ps->a->size > 3)
 	{
 		while (!is_chunk_sent(pushed_value, start, end) && ps->a->size)
@@ -54,7 +55,6 @@ void	push_a2b(t_pushswap *ps, int size)
 			else
 				ra(ps);
 			update_chunk(pushed_value, &start, &end, size);
-			ft_printf("Update chunk: [%d - %d]\n", start, end);
 		}
 	}
 	if (!is_sorted(ps->a))
