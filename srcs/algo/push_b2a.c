@@ -6,7 +6,7 @@
 /*   By: hitran <hitran@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 15:56:44 by hitran            #+#    #+#             */
-/*   Updated: 2024/07/07 11:11:59 by hitran           ###   ########.fr       */
+/*   Updated: 2024/07/09 15:59:26 by hitran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ static int	sort_a(t_pushswap *ps, int *ra_steps, int *rra_steps, int *highest)
 		return (0);
 	if (ps->a->tail->index == *highest)
 	{
+		ft_printf("tail of stack a is the current highest of stack b\n");
 		rra(ps);
 		(*rra_steps)--;
 		(*highest)--;
@@ -42,6 +43,7 @@ static int	sort_a(t_pushswap *ps, int *ra_steps, int *rra_steps, int *highest)
 	}
 	else if (get_position(ps->a, *highest, *ra_steps) != -1)
 	{
+		ft_printf("The current highest is in right place\n");
 		(*ra_steps)--;
 		(*highest)--;
 		return (1);
@@ -56,13 +58,18 @@ static int	push_highest(t_pushswap *ps, int *ra_steps,
 		return (0);
 	while (*ra_steps > 1)
 	{
+		ft_printf("ra_steps = %d\n", *ra_steps);
 		ra(ps);
 		(*ra_steps)--;
 		(*rra_steps)++;
 	}
+	ft_printf("Push the highest to a\n");
 	pa(ps);
 	if (*ra_steps == 1)
+	{
+		ft_printf("Swap the highest to right place\n");
 		sa(ps);
+	}
 	(*highest)--;
 	return (1);
 }
@@ -75,10 +82,12 @@ static int	can_push_to_a(t_pushswap *ps, int *ra_steps, int *rra_steps)
 	{
 		while (*ra_steps && ps->b->head->index > ps->a->head->index)
 		{
+			ft_printf("Rotate to push others\n");
 			ra(ps);
 			(*ra_steps)--;
 			(*rra_steps)++;
 		}
+		ft_printf("Push others to a\n");
 		pa(ps);
 		(*ra_steps)++;
 		return (1);
@@ -104,8 +113,14 @@ void	push_b2a(t_pushswap *ps, int b_size)
 		else if (can_push_to_a(ps, &ra_steps, &rra_steps))
 			continue ;
 		else if (get_position(ps->b, highest, ps->b->size) > (ps->b->size / 2))
+		{
+			ft_printf("Rotate b in reverse\n");
 			rrb(ps);
+		}
 		else if (get_position(ps->b, highest, ps->b->size) > -1)
+		{
+			ft_printf("Rotate b\n");
 			rb(ps);
+		}
 	}
 }
